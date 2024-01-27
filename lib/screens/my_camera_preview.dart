@@ -19,20 +19,12 @@ class _MyCameraPreviewState extends State<MyCameraPreview>
   late List<CameraDescription> _cameras;
   CameraController? controller;
   late CameraDescription selectedCamera;
+  bool isControllerUpdating = false;
 
   Future<List<CameraDescription>>? cameraInitilization;
-
-  // Future<List<CameraDescription>> initializeCamera() async {
-  //   _cameras = await availableCameras();
-  //   controller =
-  //       CameraController(_cameras[0], ResolutionPreset.max, enableAudio: false);
-  //   return _cameras;
-  // }
-
   final FaceDetectorOptions options = FaceDetectorOptions();
   FaceDetector? faceDetector;
   CustomPaint? _customPaint;
-
   bool isProcessing = false;
 
   @override
@@ -113,10 +105,15 @@ class _MyCameraPreviewState extends State<MyCameraPreview>
 
   void updateController(CameraDescription description) async {
     try {
-      setState(() => selectedCamera = description);
+      setState(() {
+        selectedCamera = description;
+        isControllerUpdating = true;
+      });
       await stopLiveFeed();
       await startLiveFeed();
-      setState(() {});
+      setState(() {
+        isControllerUpdating = false;
+      });
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -198,48 +195,6 @@ class _MyCameraPreviewState extends State<MyCameraPreview>
     );
   }
 
-  // static Future<List<Face>> processFrameInIsoLate(
-  //     IsoLateArguments isoLateArguments) async {
-  //   print("running on isolate");
-  //   final FaceDetectorOptions options = FaceDetectorOptions();
-  //   FaceDetector? faceDetector = FaceDetector(options: options);
-  //   CameraImage cameraImage = isoLateArguments.argus["cameraImage"]!;
-  //   CameraDescription selectedCamera = isoLateArguments.argus["selcetdCamera"];
-  //   BackgroundIsolateBinaryMessenger.ensureInitialized(
-  //       isoLateArguments.argus['token']!);
-
-  //   final WriteBuffer allBytes = WriteBuffer();
-  //   for (final Plane plane in cameraImage.planes) {
-  //     allBytes.putUint8List(plane.bytes);
-  //   }
-  //   final bytes = allBytes.done().buffer.asUint8List();
-  //   final Size imageSize = Size(
-  //     cameraImage.width.toDouble(),
-  //     cameraImage.height.toDouble(),
-  //   );
-
-  //   final imageRotation = InputImageRotationValue.fromRawValue(
-  //           selectedCamera.sensorOrientation) ??
-  //       InputImageRotation.rotation0deg;
-
-  //   final inputImageFormat =
-  //       InputImageFormatValue.fromRawValue(cameraImage.format.raw) ??
-  //           InputImageFormat.nv21;
-
-  //   InputImage inputImage = InputImage.fromBytes(
-  //       bytes: bytes,
-  //       metadata: InputImageMetadata(
-  //           size: imageSize,
-  //           rotation: imageRotation,
-  //           format: inputImageFormat,
-  //           bytesPerRow: cameraImage.planes.first.bytesPerRow));
-
-  //   final List<Face> faces = await faceDetector.processImage(inputImage);
-  //   print(faces);
-  //   sendPort.send(faces);
-  //   Isolate.exit(sendPort, faces);
-  // }
-
   @override
   void dispose() {
     // TODO: implement dispose
@@ -257,10 +212,14 @@ class _MyCameraPreviewState extends State<MyCameraPreview>
               future: cameraInitilization,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return (controller != null &&
-                          (controller?.value.isInitialized ?? false))
-                      ? CameraPreview(controller!, child: _customPaint)
-                      : Container();
+                  return (controller == null ||
+                          (controller?.value.isInitialized == false))
+                      ? Container()
+                      : isControllerUpdating == false
+                          ? CameraPreview(controller!, child: _customPaint)
+                          : const Center(
+                              child: Text("chnaging lens Direction"),
+                            );
                 } else if (snapshot.hasError) {
                   return Center(
                     child: Text(snapshot.error.toString()),

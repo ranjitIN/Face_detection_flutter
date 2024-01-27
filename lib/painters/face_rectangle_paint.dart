@@ -19,8 +19,8 @@ class FaceDetectorPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final Paint paint1 = Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.0
-      ..color = Colors.green;
+      ..strokeWidth = 2.0
+      ..color = Colors.yellow;
 
     for (final Face face in faces) {
       final left = translateX(
