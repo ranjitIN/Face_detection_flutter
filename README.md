@@ -2,9 +2,14 @@
 Flutter Project That detctes faces on live camera frame and Recognise Faces 
 
 ## Features
-- Readltime Face detection 
+- Realtime Face detection 
 
-![Example Image](https://drive.google.com/uc?id=1gOijxi2-H-yoUNJWENJvLgyNYJNGUMwd)
+<img src="https://drive.google.com/uc?id=1gOijxi2-H-yoUNJWENJvLgyNYJNGUMwd"
+     alt="sample image"/>
+
+<video width="320" height="240" controls>
+  <source src="https://drive.google.com/uc?id=1gPxX__fbD6XRIbk52K5iz1E27ScrLX4q" type="video/mp4">
+</video>     
 
 ## - Built With 🛠
 - [camera](https://pub.dev/packages/camera) - that makes it easier to add camera capabilities to your app.
