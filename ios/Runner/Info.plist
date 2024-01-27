@@ -6,6 +6,10 @@
 	<string>camera permission needed for face verification</string>
 	<!-- <key>NSMicrophoneUsageDescription</key>
 	<string>your usage description here</string> -->
+	<key>NSCameraUsageDescription</key>
+	<string>Needed camera permission for finding face</string>
+	<!-- <key>NSMicrophoneUsageDescription</key>
+	<string>your usage description here</string> -->
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
